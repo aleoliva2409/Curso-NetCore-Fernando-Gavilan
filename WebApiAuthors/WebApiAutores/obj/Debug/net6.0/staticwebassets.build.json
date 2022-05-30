@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "9Vj4Y/kqw0TATfmkeICUPKcbEz91Ukns1VLA9sA116k=",
+  "Hash": "77vTgbOP8jk6uVC8S3Zkzloi+gTWXrqhzzmY0JgSZ44=",
   "Source": "WebApiAuthors",
   "BasePath": "_content/WebApiAuthors",
   "Mode": "Default",
@@ -15,5 +15,23 @@
       "Pattern": "**"
     }
   ],
-  "Assets": []
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\danny\\Workspace\\C#\\Curso-WebApi-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\wwwroot\\file1.txt",
+      "SourceId": "WebApiAuthors",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\danny\\Workspace\\C#\\Curso-WebApi-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\wwwroot\\",
+      "BasePath": "_content/WebApiAuthors",
+      "RelativePath": "file1.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\file1.txt"
+    }
+  ]
 }

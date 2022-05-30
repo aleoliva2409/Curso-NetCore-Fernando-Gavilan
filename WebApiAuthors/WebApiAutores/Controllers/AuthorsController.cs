@@ -6,37 +6,24 @@ using WebApiAuthors.Filters;
 namespace WebApiAuthors.Controllers
 {
     [ApiController]
-    //[Route("api/authors")]
-    [Route("api/[controller]")] // [controller] = Authors // lleva el nombre del controlador
-    // [Authorize] // aplicamos el filtro de autorizacion a nivel controlador
+    [Route("api/authors")]
     public class AuthorsController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly ILogger<AuthorsController> _logger;
 
-        public AuthorsController(AppDbContext context, ILogger<AuthorsController> logger)
+        public AuthorsController(AppDbContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
         // puedo poner varias rutas para un metodo
         [HttpGet] // api/authors
-        [HttpGet("listado")] // api/authors/listado
-        [HttpGet("/listado")] // listado
         public async Task<ActionResult<List<Author>>> Get()
         {
-            _logger.LogInformation("Get all authors"); // aca agregamos la dependencia logger para ver los logs del controlador
-            // los servicios agregan en el constructor y recien podemos usar esa info en nuestras clases
-            _logger.LogWarning("Warning log");
-            
-            return await _context.Authors.Include(a =>
-                a.Books).ToListAsync();
+            return await _context.Authors.ToListAsync();
         }
 
         [HttpGet("{id:int}")]
-        //[ResponseCache(Duration = 10)] // aplicamos el filtro de cache
-        [ServiceFilter(typeof(ActionFilter))] // aplicamos el filtro personalizado
         public async Task<ActionResult<Author>> Get([FromRoute] int id) // especificamos de donde viene la data
         {
             var author = await _context.Authors.FirstOrDefaultAsync(a => a.Id == id);
@@ -50,8 +37,6 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpGet("{name}")]
-        // [Authorize] // aplicamos el filtro de autorizacion a nivel endpoint
-        [ServiceFilter(typeof(ActionFilter))] // aplicamos el filtro personalizado
         public async Task<ActionResult<Author>> Get([FromRoute] string name)
         {
             var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name.Contains(name));
@@ -62,13 +47,6 @@ namespace WebApiAuthors.Controllers
             }
 
             return author;
-        }
-
-        [HttpGet("testBinding")]
-        public void Get([FromHeader] string token, [FromQuery] string q ) // especificamos de donde viene la data
-        {
-            Console.WriteLine(token);
-            Console.WriteLine(q);
         }
 
         [HttpPost]
@@ -110,7 +88,6 @@ namespace WebApiAuthors.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            // var author = await _context.Authors.FindAsync(id);
             var author = await _context.Authors.AnyAsync(a => a.Id == id);
 
             if (!author)

@@ -15,7 +15,7 @@ namespace WebApiAuthors.Controllers
             _context = context;
         }
 
-        [HttpGet("{id:int}")]
+        /*[HttpGet("{id:int}")]
         public async Task<ActionResult<Book>> GetBook(int id)
         {
             // Sin la data de Author
@@ -38,6 +38,6 @@ namespace WebApiAuthors.Controllers
             _context.Add(book);
             await _context.SaveChangesAsync();
             return Ok();
-        }
+        }*/
     }
 }
