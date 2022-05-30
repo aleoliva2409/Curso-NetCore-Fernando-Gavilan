@@ -1,11 +1,19 @@
 {
   "Version": 1,
-  "Hash": "jyoRYqLMF47ZCma8LxoAbCzd6zK1MnpwWOvYYnVCXho=",
+  "Hash": "9Vj4Y/kqw0TATfmkeICUPKcbEz91Ukns1VLA9sA116k=",
   "Source": "WebApiAuthors",
   "BasePath": "_content/WebApiAuthors",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "WebApiAuthors\\wwwroot",
+      "Source": "WebApiAuthors",
+      "ContentRoot": "C:\\Users\\danny\\Workspace\\C#\\Curso-WebApi-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\wwwroot\\",
+      "BasePath": "_content/WebApiAuthors",
+      "Pattern": "**"
+    }
+  ],
   "Assets": []
 }
