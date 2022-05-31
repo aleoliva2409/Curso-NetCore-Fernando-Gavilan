@@ -17,6 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conn
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(); // agregamos servicio para autenticacion
+builder.Services.AddAutoMapper(typeof(Program)); // Agregamos el mapper
 
 var app = builder.Build();
 

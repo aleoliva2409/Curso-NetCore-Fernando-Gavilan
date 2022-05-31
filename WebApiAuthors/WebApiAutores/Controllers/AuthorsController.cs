@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApiAuthors.DTOs;
 using WebApiAuthors.Entities;
-using WebApiAuthors.Filters;
 
 namespace WebApiAuthors.Controllers
 {
@@ -10,54 +11,59 @@ namespace WebApiAuthors.Controllers
     public class AuthorsController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AuthorsController(AppDbContext context)
+        public AuthorsController(AppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // puedo poner varias rutas para un metodo
         [HttpGet] // api/authors
-        public async Task<ActionResult<List<Author>>> Get()
+        public async Task<ActionResult<List<AuthorDTO>>> Get()
         {
-            return await _context.Authors.ToListAsync();
+            var authors = await _context.Authors.ToListAsync();
+            return _mapper.Map<List<AuthorDTO>>(authors);
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Author>> Get([FromRoute] int id) // especificamos de donde viene la data
+        public async Task<ActionResult<AuthorDTO>> Get([FromRoute] int id)
         {
-            var author = await _context.Authors.FirstOrDefaultAsync(a => a.Id == id);
+            var author = await _context.Authors.FirstOrDefaultAsync(authorDB => authorDB.Id == id);
 
             if (author == null)
             {
                 return NotFound();
             }
 
-            return author;
+            return _mapper.Map<AuthorDTO>(author);
         }
 
         [HttpGet("{name}")]
-        public async Task<ActionResult<Author>> Get([FromRoute] string name)
+        public async Task<ActionResult<List<AuthorDTO>>> Get([FromRoute] string name)
         {
-            var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name.Contains(name));
+            var authors = await _context.Authors.Where(authorDB => authorDB.Name.Contains(name)).ToListAsync();
 
-            if (author == null)
+            if (authors == null)
             {
                 return NotFound();
             }
 
-            return author;
+            return _mapper.Map<List<AuthorDTO>>(authors);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Author author)
+        public async Task<ActionResult> Post([FromBody] AuthorCreateDTO authorCreateDto)
         {
-            var authorExists = await _context.Authors.AnyAsync(a => a.Name == author.Name);
+            var authorExists = await _context.Authors.AnyAsync(a => a.Name == authorCreateDto.Name);
 
             if (authorExists)
             {
-                return BadRequest($"Author {author.Name} already exists");
+                return BadRequest($"Author {authorCreateDto.Name} already exists");
             }
+
+            var author = _mapper.Map<Author>(authorCreateDto);
 
             _context.Add(author);
             await _context.SaveChangesAsync();

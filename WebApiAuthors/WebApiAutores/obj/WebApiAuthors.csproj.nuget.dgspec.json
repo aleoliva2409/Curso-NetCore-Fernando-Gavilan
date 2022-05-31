@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\danny\\Workspace\\C#\\Curso-WebApi-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\WebApiAuthors.csproj": {}
+    "C:\\Users\\danny\\Workspace\\C#\\Curso-NetCore-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\WebApiAuthors.csproj": {}
   },
   "projects": {
-    "C:\\Users\\danny\\Workspace\\C#\\Curso-WebApi-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\WebApiAuthors.csproj": {
+    "C:\\Users\\danny\\Workspace\\C#\\Curso-NetCore-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\WebApiAuthors.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\danny\\Workspace\\C#\\Curso-WebApi-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\WebApiAuthors.csproj",
+        "projectUniqueName": "C:\\Users\\danny\\Workspace\\C#\\Curso-NetCore-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\WebApiAuthors.csproj",
         "projectName": "WebApiAuthors",
-        "projectPath": "C:\\Users\\danny\\Workspace\\C#\\Curso-WebApi-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\WebApiAuthors.csproj",
+        "projectPath": "C:\\Users\\danny\\Workspace\\C#\\Curso-NetCore-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\WebApiAuthors.csproj",
         "packagesPath": "C:\\Users\\danny\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\danny\\Workspace\\C#\\Curso-WebApi-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\obj\\",
+        "outputPath": "C:\\Users\\danny\\Workspace\\C#\\Curso-NetCore-Fernando-Gavilan\\WebApiAuthors\\WebApiAutores\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\danny\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,6 +40,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[11.0.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[6.0.5, )"
