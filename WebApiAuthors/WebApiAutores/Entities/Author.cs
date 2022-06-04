@@ -11,6 +11,7 @@ namespace WebApiAuthors.Entities
         [Required(ErrorMessage = "Field {0} is required")]
         [StringLength(maximumLength: 50, ErrorMessage = "Field {0} must be maximum {1} characters")]
         [CapitalLetter] // custom validation
-        public string Name { get; set; }        
+        public string Name { get; set; }
+        public List<AuthorBook> AuthorsBooks { get; set; }
     }
 }

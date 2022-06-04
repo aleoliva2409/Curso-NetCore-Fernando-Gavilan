@@ -11,6 +11,8 @@ namespace WebApiAuthors.Entities
         [StringLength(maximumLength: 70, ErrorMessage = "Field {0} must be maximum {1} characters")]
         [CapitalLetter]
         public string Title { get; set; }
+        public DateTime? PublicationDate { get; set; }
         public List<Comment> Comments { get; set; }
+        public List<AuthorBook> AuthorsBooks { get; set; }
     }
 }

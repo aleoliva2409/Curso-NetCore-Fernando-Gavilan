@@ -11,7 +11,7 @@ var connectionString = builder.Configuration.GetConnectionString("defaultConnect
 
 builder.Services.AddControllers(options => 
     options.Filters.Add(typeof (ExceptionFilter))).AddJsonOptions(options =>
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

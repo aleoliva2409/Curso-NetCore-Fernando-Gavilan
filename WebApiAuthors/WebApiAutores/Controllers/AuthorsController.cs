@@ -28,16 +28,19 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<AuthorDTO>> Get([FromRoute] int id)
+        public async Task<ActionResult<AuthorWithBooksDTO>> Get([FromRoute] int id)
         {
-            var author = await _context.Authors.FirstOrDefaultAsync(authorDB => authorDB.Id == id);
+            var author = await _context.Authors
+                .Include(authorDB => authorDB.AuthorsBooks)
+                .ThenInclude(authorBook => authorBook.Book)
+                .FirstOrDefaultAsync(authorDB => authorDB.Id == id);
 
             if (author == null)
             {
                 return NotFound();
             }
 
-            return _mapper.Map<AuthorDTO>(author);
+            return _mapper.Map<AuthorWithBooksDTO>(author);
         }
 
         [HttpGet("{name}")]
@@ -71,38 +74,36 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put(int id, Author author)
+        public async Task<ActionResult> Put(int id, AuthorCreateDTO authorCreateDto)
         {
-            if (author.Id != id)
-            {
-                return NotFound();
-            }
-
-            var isExistAuthor = await _context.Authors.AnyAsync(a => a.Id == id);
+           var isExistAuthor = await _context.Authors.AnyAsync(a => a.Id == id);
 
             if (!isExistAuthor)
             {
                 return NotFound();
             }
 
+            var author = _mapper.Map<Author>(authorCreateDto);
+            author.Id = id;
 
             _context.Update(author);
             await _context.SaveChangesAsync();
-            return Ok();
+
+            return NoContent();
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var author = await _context.Authors.AnyAsync(a => a.Id == id);
+            var authorExist = await _context.Authors.AnyAsync(a => a.Id == id);
 
-            if (!author)
+            if (!authorExist)
             {
                 return NotFound();
             }
             _context.Remove(new Author() { Id = id }); //debemos mandarle un objeto con el id del author a eliminar
             await _context.SaveChangesAsync();
-            return Ok();
+            return NoContent();
         }
     }
 }
