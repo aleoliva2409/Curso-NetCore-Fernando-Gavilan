@@ -32,6 +32,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Esto es para que funcione tanto en PROD como en DEV
+/*app.UseSwagger();
+app.UseSwaggerUI();*/
+
 app.UseHttpsRedirection();
 
 app.UseRouting();

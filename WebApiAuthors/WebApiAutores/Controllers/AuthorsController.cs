@@ -12,11 +12,24 @@ namespace WebApiAuthors.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public AuthorsController(AppDbContext context, IMapper mapper)
+        public AuthorsController(AppDbContext context, IMapper mapper, IConfiguration configuration)
         {
             _context = context;
             _mapper = mapper;
+            _configuration = configuration;
+        }
+
+        [HttpGet("Configurations")]
+        public ActionResult<string> GetConfigurations()
+        {
+            // toma primero las variables por linea de comando, luego las variables de entorno, despues las de user secrets y por ultimo las de appSettings
+            return _configuration["lastname"];
+
+            // otra manera de ingresar dentro un objeto y obtener el valor
+            // no es case sensitive
+            // return _configuration["connectionStrings:defaultConnection"];
         }
 
         // puedo poner varias rutas para un metodo
