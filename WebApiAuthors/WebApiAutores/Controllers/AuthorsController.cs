@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAuthors.DTOs;
@@ -8,6 +10,7 @@ namespace WebApiAuthors.Controllers
 {
     [ApiController]
     [Route("api/authors")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AuthorsController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -34,6 +37,7 @@ namespace WebApiAuthors.Controllers
 
         // puedo poner varias rutas para un metodo
         [HttpGet] // api/authors
+        // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<List<AuthorDTO>>> Get()
         {
             var authors = await _context.Authors.ToListAsync();
@@ -41,6 +45,9 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpGet("{id:int}")]
+        // Esto permite que cualquiera pueda hacer una request a este endpoint sin necesidad
+        // de authenticacion cuando el Authorize se coloca a nidel controlador
+        [AllowAnonymous]
         public async Task<ActionResult<AuthorWithBooksDTO>> Get([FromRoute] int id)
         {
             var author = await _context.Authors

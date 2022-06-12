@@ -1,9 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WebApiAuthors.Entities;
 
 namespace WebApiAuthors
 {
-    public class AppDbContext : DbContext
+    
+    // public class AppDbContext : DbContext
+
+    //  cambiamos de clase xq queremos usar Identity
+    public class AppDbContext : IdentityDbContext
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -13,6 +18,7 @@ namespace WebApiAuthors
         {
             base.OnModelCreating(modelBuilder);
             
+            // creamos una tabla intermedia
             modelBuilder.Entity<AuthorBook>()
                 .HasKey(ab => new { ab.BookId, ab.AuthorId });
         }
