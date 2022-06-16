@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json.Serialization;
 using WebApiAuthors;
 using WebApiAuthors.Filters;
 using WebApiAuthors.Middlewares;
+using WebApiAuthors.Services;
 
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("defaultConnection");
 // Add services to the container.
@@ -63,6 +66,25 @@ builder.Services.AddAutoMapper(typeof(Program)); // Agregamos el mapper
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
+// agregando la authorization basada en claims
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("IsAdmin", p => p.RequireClaim("isAdmin"));
+});
+// agregando la config dde CORS
+builder.Services.AddCors(opt =>
+{
+    // recomendacion autocompletada
+    //opt.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+    opt.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader();
+    });
+});
+
+builder.Services.AddDataProtection();
+builder.Services.AddTransient<HashService>();
 
 var app = builder.Build();
 
@@ -84,6 +106,8 @@ app.UseSwaggerUI();*/
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseCors(); // agregamos el middleware de CORS
 
 app.UseAuthorization(); // agregamos el middleware para autenticacion
 

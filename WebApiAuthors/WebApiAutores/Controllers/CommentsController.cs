@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAuthors.DTOs;
@@ -12,11 +15,14 @@ namespace WebApiAuthors.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public CommentsController(AppDbContext context, IMapper mapper)
+        public CommentsController(AppDbContext context, IMapper mapper,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -48,8 +54,13 @@ namespace WebApiAuthors.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Post(int bookId, CommentCreateDTO commentCreateDTO)
         {
+            // HttpContext funciona si tiene el Authorize, de lo contrario no funciona.
+            var email = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault().Value;
+            var user = await _userManager.FindByEmailAsync(email);
+            var userId = user.Id;
             var bookExist = await _context.Books.AnyAsync(bookDB => bookDB.Id == bookId);
 
             if (!bookExist)
@@ -59,6 +70,7 @@ namespace WebApiAuthors.Controllers
 
             var comment = _mapper.Map<Comment>(commentCreateDTO);
             comment.BookId = bookId;
+            comment.UserId = userId;
             _context.Add(comment);
             await _context.SaveChangesAsync();
 
