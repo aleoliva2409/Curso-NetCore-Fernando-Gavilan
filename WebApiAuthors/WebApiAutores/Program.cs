@@ -19,7 +19,11 @@ var connectionString = builder.Configuration.GetConnectionString("defaultConnect
 // Add services to the container.
 
 builder.Services.AddControllers(options =>
-    options.Filters.Add(typeof(ExceptionFilter))).AddJsonOptions(options =>
+{
+    options.Filters.Add(typeof(ExceptionFilter));
+    // se agrega para el versionamiento de la API
+    options.Conventions.Add(new SwaggeGroupByVersion());
+}).AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -28,6 +32,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiAuthors", Version = "v1" });
+    c.SwaggerDoc("v2", new OpenApiInfo { Title = "WebApiAuthors", Version = "v2" });
     c.OperationFilter<AddHATEOASParameter>();
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -104,7 +109,11 @@ app.UseLoggerMiddlewareResponse(); // se crea una clase para no exponer la origi
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiAuthors V1");
+        c.SwaggerEndpoint("/swagger/v2/swagger.json", "WebApiAuthors V2");
+    });
 }
 
 // Esto es para que funcione tanto en PROD como en DEV

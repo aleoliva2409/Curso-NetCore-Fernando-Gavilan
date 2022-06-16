@@ -7,10 +7,10 @@ using WebApiAuthors.DTOs;
 using WebApiAuthors.Entities;
 using WebApiAuthors.Filters;
 
-namespace WebApiAuthors.Controllers
+namespace WebApiAuthors.Controllers.V1
 {
     [ApiController]
-    [Route("api/authors")]
+    [Route("api/v1/authors")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsAdmin")]
     public class AuthorsController : ControllerBase
     {
@@ -40,7 +40,7 @@ namespace WebApiAuthors.Controllers
         }
 
         // puedo poner varias rutas para un metodo
-        [HttpGet(Name = "getAuthors")] // api/authors
+        [HttpGet(Name = "getAuthorsV1")] // api/authors
         // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [AllowAnonymous]
         [ServiceFilter(typeof(HATEOASAuthorFilterAttribute))]
@@ -51,7 +51,7 @@ namespace WebApiAuthors.Controllers
         }
         
 
-        [HttpGet("{id:int}", Name = "getAuthor")] // api/authors/1
+        [HttpGet("{id:int}", Name = "getAuthorV1")] // api/authors/1
         // Esto permite que cualquiera pueda hacer una request a este endpoint sin necesidad
         // de authenticacion cuando el Authorize se coloca a nidel controlador
         [AllowAnonymous]
@@ -73,7 +73,7 @@ namespace WebApiAuthors.Controllers
             return authorDto;
         }
 
-        [HttpGet("{name}", Name = "getAuthorByName")] // api/authors/juan
+        [HttpGet("{name}", Name = "getAuthorByNameV1")] // api/authors/juan
         public async Task<ActionResult<List<AuthorDTO>>> GetByName([FromRoute] string name)
         {
             var authors = await _context.Authors.Where(authorDB => authorDB.Name.Contains(name)).ToListAsync();
@@ -86,7 +86,7 @@ namespace WebApiAuthors.Controllers
             return _mapper.Map<List<AuthorDTO>>(authors);
         }
 
-        [HttpPost(Name = "createAuthor")] // api/authors
+        [HttpPost(Name = "createAuthorV1")] // api/authors
         public async Task<ActionResult> Post([FromBody] AuthorCreateDTO authorCreateDto)
         {
             var authorExists = await _context.Authors.AnyAsync(a => a.Name == authorCreateDto.Name);
@@ -103,7 +103,7 @@ namespace WebApiAuthors.Controllers
             return Ok();
         }
 
-        [HttpPut("{id:int}", Name = "updateAuthor")] // api/authors/1
+        [HttpPut("{id:int}", Name = "updateAuthorV1")] // api/authors/1
         public async Task<ActionResult> Put(int id, AuthorCreateDTO authorCreateDto)
         {
             var isExistAuthor = await _context.Authors.AnyAsync(a => a.Id == id);
@@ -122,7 +122,7 @@ namespace WebApiAuthors.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:int}", Name = "deleteAuthor")] // api/authors/1
+        [HttpDelete("{id:int}", Name = "deleteAuthorV1")] // api/authors/1
         public async Task<ActionResult> Delete(int id)
         {
             var authorExist = await _context.Authors.AnyAsync(a => a.Id == id);

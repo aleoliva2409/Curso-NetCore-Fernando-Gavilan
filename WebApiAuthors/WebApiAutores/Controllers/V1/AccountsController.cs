@@ -10,10 +10,10 @@ using System.Text;
 using WebApiAuthors.DTOs;
 using WebApiAuthors.Services;
 
-namespace WebApiAuthors.Controllers
+namespace WebApiAuthors.Controllers.V1
 {
     [ApiController]
-    [Route("api/accounts")]
+    [Route("api/v1/accounts")]
     public class AccountsController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
