@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -10,6 +11,7 @@ using WebApiAuthors;
 using WebApiAuthors.Filters;
 using WebApiAuthors.Middlewares;
 using WebApiAuthors.Services;
+using WebApiAuthors.Utils;
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +28,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiAuthors", Version = "v1" });
+    c.OperationFilter<AddHATEOASParameter>();
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -85,6 +88,11 @@ builder.Services.AddCors(opt =>
 
 builder.Services.AddDataProtection();
 builder.Services.AddTransient<HashService>();
+
+// agregamos mas servicios
+builder.Services.AddTransient<GenerateLinks>();
+builder.Services.AddTransient<HATEOASAuthorFilterAttribute>();
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 var app = builder.Build();
 

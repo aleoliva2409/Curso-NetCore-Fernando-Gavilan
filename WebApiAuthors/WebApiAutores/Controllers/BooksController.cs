@@ -21,7 +21,7 @@ namespace WebApiAuthors.Controllers
         }
 
         // Vamos a darle un nombre a esta ruta
-        [HttpGet("{id:int}", Name = "GetBook")]
+        [HttpGet("{id:int}", Name = "getBook")]
         public async Task<ActionResult<BookWithAuthorsDTO>> GetBook(int id)
         {
             /*var book = await _context.Books.Include(bookDB => bookDB.Comments)
@@ -43,7 +43,7 @@ namespace WebApiAuthors.Controllers
             return _mapper.Map<BookWithAuthorsDTO>(book);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "createBook")]
         public async Task<ActionResult> Post(BookCreateDTO bookCreateDTO)
         {
             if (bookCreateDTO.AuthorsIds == null)
@@ -76,10 +76,10 @@ namespace WebApiAuthors.Controllers
             // se le va a mandar por headers la ruta para consultar el lbiro creado
             var bookDto = _mapper.Map<BookDTO>(book);
 
-            return CreatedAtRoute("GetBook", new { id = book.Id }, bookDto);
+            return CreatedAtRoute("getBook", new { id = book.Id }, bookDto);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int}", Name = "updateBook")]
         public async Task<ActionResult> Put(int id, BookCreateDTO bookCreateDto)
         {
             var bookDB = await _context.Books.Include(x => x.AuthorsBooks).FirstOrDefaultAsync(x => x.Id == id);
@@ -103,7 +103,7 @@ namespace WebApiAuthors.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id:int}")]
+        [HttpPatch("{id:int}", Name = "patchBook")]
         public async Task<ActionResult> Patch(int id, JsonPatchDocument<BookPatchDTO> bookPatchDto)
         {
             if (bookPatchDto == null)
@@ -138,7 +138,7 @@ namespace WebApiAuthors.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int}", Name = "deleteBook")]
         public async Task<ActionResult> Delete(int id)
         {
             var bookExist = await _context.Books.AnyAsync(b => b.Id == id);

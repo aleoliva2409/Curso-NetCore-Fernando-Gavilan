@@ -67,7 +67,7 @@ namespace WebApiAuthors.Controllers
             return Ok(new { text, Hash1 = result1, Hash2 = result2 });
         }
 
-        [HttpPost("register")]
+        [HttpPost("register", Name = "registerUser")]
         public async Task<ActionResult<ResponseAuth>> Register(UserCredentials userCredentials)
         {
             var user = new IdentityUser() { UserName = userCredentials.Email, Email = userCredentials.Email };
@@ -83,7 +83,7 @@ namespace WebApiAuthors.Controllers
             }
         }
 
-        [HttpPost("login")]
+        [HttpPost("login", Name = "loginUser")]
         public async Task<ActionResult<ResponseAuth>> Login(UserCredentials userCredentials)
         {
             var result = await _signInManager.PasswordSignInAsync(userCredentials.Email,
@@ -98,8 +98,8 @@ namespace WebApiAuthors.Controllers
                 return BadRequest("Login Error");
             }
         }
-        
-        [HttpGet("renewToken")]
+
+        [HttpGet("renewToken", Name = "renewToken")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<ResponseAuth>> Renew()
         {
@@ -109,7 +109,7 @@ namespace WebApiAuthors.Controllers
             return await BuildToken(creds);
         }
 
-        [HttpPost("makeAdmin")]
+        [HttpPost("makeAdmin", Name = "makeAdmin")]
         public async Task<ActionResult> MakeAdmin(EditAdminDTO editAdminDto)
         {
             var user = await _userManager.FindByEmailAsync(editAdminDto.Email);
@@ -117,7 +117,7 @@ namespace WebApiAuthors.Controllers
             return NoContent();
         }
 
-        [HttpPost("removeAdmin")]
+        [HttpPost("removeAdmin", Name = "removeAdmin")]
         public async Task<ActionResult> RemoveAdmin(EditAdminDTO editAdminDto)
         {
             var user = await _userManager.FindByEmailAsync(editAdminDto.Email);
