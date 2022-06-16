@@ -135,3 +135,5 @@ C:\Users\danny\Workspace\C#\Curso-NetCore-Fernando-Gavilan\WebApiAuthors\WebApiA
 C:\Users\danny\Workspace\C#\Curso-NetCore-Fernando-Gavilan\WebApiAuthors\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\danny\Workspace\C#\Curso-NetCore-Fernando-Gavilan\WebApiAuthors\WebApiAutores\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
 C:\Users\danny\Workspace\C#\Curso-NetCore-Fernando-Gavilan\WebApiAuthors\WebApiAutores\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\danny\Workspace\C#\Curso-NetCore-Fernando-Gavilan\WebApiAuthors\WebApiAutores\bin\Debug\net6.0\WebApiAuthors.xml
+C:\Users\danny\Workspace\C#\Curso-NetCore-Fernando-Gavilan\WebApiAuthors\WebApiAutores\obj\Debug\net6.0\WebApiAuthors.xml

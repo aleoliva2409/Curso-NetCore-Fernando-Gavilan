@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAuthors.DTOs;
 using WebApiAuthors.Entities;
+using WebApiAuthors.Utils;
 
 namespace WebApiAuthors.Controllers.V1
 {
@@ -25,8 +26,10 @@ namespace WebApiAuthors.Controllers.V1
             _userManager = userManager;
         }
 
+        // cambiamos para usar pagination
         [HttpGet(Name = "getComments")]
-        public async Task<ActionResult<List<CommentDTO>>> Get(int bookId)
+        public async Task<ActionResult<List<CommentDTO>>> Get(int bookId,
+            [FromQuery] PaginationDTO paginationDTO)
         {
             var bookExist = await _context.Books.AnyAsync(bookDB => bookDB.Id == bookId);
 
@@ -34,8 +37,9 @@ namespace WebApiAuthors.Controllers.V1
             {
                 return BadRequest("No existe el Libro");
             }
-
-            var comments = await _context.Comments.Where(commentDB => commentDB.BookId == bookId).ToListAsync();
+            var queryable = _context.Comments.Where(commentDB => commentDB.BookId == bookId).AsQueryable();
+            await HttpContext.InsertPaginationParametersInHeaders(queryable);
+            var comments = await queryable.OrderBy(comment => comment.Id).ToPaginate(paginationDTO).ToListAsync();
 
             return _mapper.Map<List<CommentDTO>>(comments);
         }

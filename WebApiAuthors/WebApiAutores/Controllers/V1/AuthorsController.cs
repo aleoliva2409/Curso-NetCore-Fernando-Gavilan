@@ -6,12 +6,17 @@ using Microsoft.EntityFrameworkCore;
 using WebApiAuthors.DTOs;
 using WebApiAuthors.Entities;
 using WebApiAuthors.Filters;
+using WebApiAuthors.Utils;
 
 namespace WebApiAuthors.Controllers.V1
 {
     [ApiController]
-    [Route("api/v1/authors")]
+    // [Route("api/v1/authors")]
+    [Route("api/authors")]
+    [HeaderAttribute("API-Version", "1")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsAdmin")]
+    // Con esto documentamos los tipos de respuesta que devolveremos por default
+    [ApiConventionType(typeof(DefaultApiConventions))]
     public class AuthorsController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -44,9 +49,14 @@ namespace WebApiAuthors.Controllers.V1
         // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [AllowAnonymous]
         [ServiceFilter(typeof(HATEOASAuthorFilterAttribute))]
-        public async Task<ActionResult<List<AuthorDTO>>> Get()
+        // Documentamos las respuestas que se pueden devolver la request
+        // [ProducesResponseType(200)]
+        // [ProducesResponseType(404)]
+        public async Task<ActionResult<List<AuthorDTO>>> Get([FromQuery] PaginationDTO paginationDTO)
         {
-            var authors = await _context.Authors.ToListAsync();
+            var queryable = _context.Authors.AsQueryable();
+            await HttpContext.InsertPaginationParametersInHeaders(queryable);
+            var authors = await queryable.OrderBy(author => author.Name).ToPaginate(paginationDTO).ToListAsync();
             return _mapper.Map<List<AuthorDTO>>(authors);
         }
         
@@ -122,6 +132,11 @@ namespace WebApiAuthors.Controllers.V1
             return NoContent();
         }
 
+        /// <summary>
+        /// Delete a Author by ID
+        /// </summary>
+        /// <param name="id">Id del Autor a borrar</param>
+        /// <returns></returns>
         [HttpDelete("{id:int}", Name = "deleteAuthorV1")] // api/authors/1
         public async Task<ActionResult> Delete(int id)
         {

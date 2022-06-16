@@ -6,11 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using WebApiAuthors.DTOs;
 using WebApiAuthors.Entities;
 using WebApiAuthors.Filters;
+using WebApiAuthors.Utils;
 
 namespace WebApiAuthors.Controllers.V2
 {
     [ApiController]
-    [Route("api/v2/authors")]
+    // [Route("api/v2/authors")]
+    [Route("api/authors")]
+    [HeaderAttribute("API-Version", "2")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsAdmin")]
     public class AuthorsController : ControllerBase
     {

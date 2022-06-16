@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using WebApiAuthors;
@@ -31,9 +32,28 @@ builder.Services.AddEndpointsApiExplorer();
 // config swwager
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiAuthors", Version = "v1" });
+    // Add the version and the title of your API.
+    // se pueden agregar varios datos 
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "WebApiAuthors",
+        Version = "v1",
+        Description = "WebApiAuthors API(Curso .NET)",
+        Contact = new OpenApiContact
+        {
+            Name = "Daniel Oliva",
+            Email = "dannyoliva47@gmail.com",
+            Url = new Uri("https://aleoliva2409-dev.com.ar/")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "MIT",
+            Url = new Uri("https://opensource.org/licenses/MIT")
+        }
+    });
     c.SwaggerDoc("v2", new OpenApiInfo { Title = "WebApiAuthors", Version = "v2" });
     c.OperationFilter<AddHATEOASParameter>();
+    c.OperationFilter<AddVersionParameter>();
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -56,6 +76,10 @@ builder.Services.AddSwaggerGen(c =>
             new string[] {}
         }
     });
+
+    var fileXML = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var filePath = Path.Combine(AppContext.BaseDirectory, fileXML);
+    c.IncludeXmlComments(filePath);
 });
 // agregamos servicio para autenticacion
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -87,7 +111,8 @@ builder.Services.AddCors(opt =>
 
     opt.AddDefaultPolicy(builder =>
     {
-        builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader();
+        builder.WithOrigins("https://apirequest.io").AllowAnyMethod().AllowAnyHeader()
+        .WithExposedHeaders(new string[] { "X-Total-Count" });
     });
 });
 
