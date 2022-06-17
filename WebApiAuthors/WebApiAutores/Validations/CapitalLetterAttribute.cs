@@ -8,7 +8,7 @@ namespace WebApiAuthors.Validations
         {
             Console.WriteLine("value: " + value);
 
-            if (value == null)
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
             {
                 return ValidationResult.Success;
             }
