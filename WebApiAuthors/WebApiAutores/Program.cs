@@ -124,6 +124,9 @@ builder.Services.AddTransient<GenerateLinks>();
 builder.Services.AddTransient<HATEOASAuthorFilterAttribute>();
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
+// agregamos Application Insights
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:ConnectionString"]);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -131,7 +134,7 @@ var app = builder.Build();
 //app.UseMiddleware<LoggerMiddleware>();
 app.UseLoggerMiddlewareResponse(); // se crea una clase para no exponer la original(LoggerMiddleware)
 
-if (app.Environment.IsDevelopment())
+/*if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
@@ -139,7 +142,13 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiAuthors V1");
         c.SwaggerEndpoint("/swagger/v2/swagger.json", "WebApiAuthors V2");
     });
-}
+}*/
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiAuthors V1");
+    c.SwaggerEndpoint("/swagger/v2/swagger.json", "WebApiAuthors V2");
+});
 
 // Esto es para que funcione tanto en PROD como en DEV
 /*app.UseSwagger();
